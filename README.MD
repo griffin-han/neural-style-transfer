@@ -6,3 +6,5 @@
     - download the vgg19 model from here: www.vlfeat.org/matconvnet/models/imagenet-vgg-verydeep-19.mat and put it in pretrained_model folder.
     - put the content.jpg into origin_image folder and put style.jpg into style_image folder.
     - use command 'python main.py' to start transfer. 
+- example
+    ![](example.png)
