@@ -1,16 +1,17 @@
+from utils import model
+
 import numpy as np
 import tensorflow as tf
 
-import model as model
-from io_utils import load_image, load_vgg19, save_image
-from misc import generate_blank_image
+from utils.io_utils import load_image, load_vgg19, save_image
+from utils.misc import generate_blank_image
 
 # the mean value to adjust, to match the vgg19 input scale
 means = np.array([123.68, 116.779, 103.939]).reshape((1, 1, 3))
 # load content image, style image and init the generated image from a blank image
-content_image = load_image('origin_image/content.jpg', max_len_of_height_widith=600) - means
+content_image = load_image('slow_nst/origin_image/content.jpg', max_len_of_height_widith=600) - means
 height, width = content_image.shape[0], content_image.shape[1]
-style_image = load_image('style_image/style.jpg', new_hw_tuple=(height, width)) - means
+style_image = load_image('slow_nst/style_image/style.jpg', new_hw_tuple=(height, width)) - means
 generated_image = generate_blank_image(height, width)
 
 # reshape the three images to the same size
@@ -22,7 +23,7 @@ generated_image = np.reshape(generated_image, shape)
 # load the vgg19 model
 vgg = load_vgg19('pretrained_model/imagenet-vgg-verydeep-19.mat')
 sess = tf.InteractiveSession()
-network_input, conv4_2, relu1_1, relu2_1, relu3_1, relu4_1, relu5_1 = model.build_network(vgg, height, width)
+network_input, conv4_2, relu1_1, relu2_1, relu3_1, relu4_1, relu5_1 = model.build_vgg19(vgg, height, width)
 
 # compute the content loss
 sess.run(network_input.assign(content_image))
@@ -54,5 +55,5 @@ for i in range(6000):
         tmp_gen_img = sess.run(network_input)
         tmp_gen_img = np.reshape(tmp_gen_img, [height, width, 3])
         tmp_gen_img = np.clip(tmp_gen_img + means, 0, 255).astype('uint8')
-        save_image(tmp_gen_img, 'output_image/{id}.jpg'.format(id=i))
-save_image(tmp_gen_img, 'output_image/{id}.jpg'.format(id=i))
+        save_image(tmp_gen_img, 'slow_nst/output_image/{id}.jpg'.format(id=i))
+save_image(tmp_gen_img, 'slow_nst/output_image/{id}.jpg'.format(id=i))
