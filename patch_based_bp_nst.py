@@ -82,7 +82,7 @@ for i in range(len(photo_file_paths)):
         print(i, k, sess.run(total_loss, feed_dict={phi_cs_placeholder: phi_cs}))
 
     generated_image = sess.run(swap_photo_input)
-    generated_image = (generated_image + means).reshape(generated_image.shape[1:])
+    generated_image = generated_image.reshape(generated_image.shape[1:])
 
     generated_image = np.clip(generated_image, 0, 255).astype('uint8')
     save_image(generated_image, 'patch_based_fast_nst/output_image/%04d.jpg' % (i,))
